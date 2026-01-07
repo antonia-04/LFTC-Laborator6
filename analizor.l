@@ -1,5 +1,5 @@
 %{
-/* include robust: merge indiferent dacă Bison generează .h sau .hpp */
+/* include robust: merge indiferent daca bison genereaza parser.tab.h sau parser.tab.hpp */
 #if __has_include("parser.tab.hpp")
   #include "parser.tab.hpp"
 #else
@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+/* duplicam yytext pentru token-ul id (bison primeste char*) */
 static char* dup_yytext(void) {
     size_t n = strlen(yytext);
     char* s = (char*)malloc(n + 1);
@@ -17,10 +18,10 @@ static char* dup_yytext(void) {
 }
 %}
 
-
 %option noyywrap
 %option yylineno
 
+/* definitii de pattern-uri reutilizabile */
 DIGIT      [0-9]
 LETTER     [A-Za-z]
 ID         {LETTER}({LETTER}|{DIGIT}|_)*
@@ -45,10 +46,13 @@ WS         [ \t\r\n]+
 "*"        { return '*'; }
 
 {INTCONST} { yylval.ival = atoi(yytext); return NUMBER; }
+
 {ID}       { yylval.sval = dup_yytext(); return ID; }
 
 {WS}       { }
+
 "//".*     { }
+
 
 .          { return yytext[0]; }
 

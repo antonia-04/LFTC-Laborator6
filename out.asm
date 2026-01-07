@@ -15,55 +15,36 @@ segment data use32 class=data
     fmt_in  db "%d", 0
     fmt_out db "%d", 10, 0
 
-    x dd 0
-    y dd 0
-    z dd 0
+    a dd 0
+    b dd 0
 
 segment code use32 class=code
 start:
-    ; cin >> x
-    push dword x
+    ; cin >> a
+    push dword a
     push dword fmt_in
     call [scanf]
     add esp, 8
     
-    ; cin >> y
-    push dword y
-    push dword fmt_in
-    call [scanf]
-    add esp, 8
-    
-    push dword [x]
-    push dword [y]
-    ; ADD
+    push dword [a]
+    push dword 2
+    ; mul
+    pop ebx
+    pop eax
+    imul eax, ebx
+    push eax
+    push dword 1
+    ; add
     pop ebx
     pop eax
     add eax, ebx
     push eax
-    push dword 3
-    ; MUL
-    pop ebx
+    ; store in b
     pop eax
-    imul eax, ebx
-    push eax
-    push dword [x]
-    push dword 2
-    ; MUL
-    pop ebx
-    pop eax
-    imul eax, ebx
-    push eax
-    ; SUB
-    pop ebx
-    pop eax
-    sub eax, ebx
-    push eax
-    ; store in z
-    pop eax
-    mov [z], eax
+    mov [b], eax
     
-    ; cout << z
-    push dword [z]
+    ; cout << b
+    push dword [b]
     push dword fmt_out
     call [printf]
     add esp, 8
