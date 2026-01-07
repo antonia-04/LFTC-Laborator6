@@ -1,0 +1,7 @@
+int x;
+int y;
+int z;
+read x;
+read y;
+z <- x * y - 4;
+write z;
