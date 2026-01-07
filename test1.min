@@ -1,5 +1,5 @@
 int a;
 int b;
-read a;
-b <- a * 2 + 1;
-write b;
+cin >> a;
+b = a * 2 + 1;
+cout << b;

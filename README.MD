@@ -1,52 +1,35 @@
-## Mini-limbaj de programare (MLP) – specificație
+## MLP (subset de C++)
 
-* **Tipuri de date**
+- Tip de date:
+  - `int`
 
-    * `int` – numere întregi pe 32 de biți
+- Declarații:
+  - `int variabila;`
 
-* **Declarații de variabile**
+- Intrare:
+  - `cin >> variabila;`
 
-    * `int variabila;`
+- Ieșire:
+  - `cout << variabila;`
 
-* **Instrucțiune de atribuire**
+- Atribuire:
+  - `variabila = expresie;`
 
-    * `variabila <- expresie_aritmetica;`
+- Expresii:
+  - operanzi: constante întregi, variabile, paranteze
+  - operatori binari: `+`, `-`, `*`
+  - paranteze: `(` `)`
+  - operatorii pot apărea de oricâte ori
 
-* **Instrucțiuni de citire**
+- Identificatori:
+  - încep cu literă; pot conține litere/cifre/`_`
+  - trebuie declarați înainte de utilizare
 
-    * `read variabila;` – citește un număr întreg de la intrare
+- Structură:
+  - program = listă de instrucțiuni terminate cu `;`
 
-* **Instrucțiuni de scriere**
-
-    * `write variabila;` – afișează valoarea unei variabile
-
-* **Expresii aritmetice**
-
-    * formate din:
-
-        * constante întregi
-        * identificatori de variabile
-        * operatori binari: `+`, `-`, `*`
-        * paranteze rotunde `(` `)`
-    * operatorii pot apărea de oricâte ori într-o expresie
-
-* **Identificatori**
-
-    * încep cu literă
-    * pot conține litere, cifre și `_`
-    * trebuie declarați înainte de utilizare
-
-* **Structura programului**
-
-    * programul este o succesiune de instrucțiuni
-    * fiecare instrucțiune se termină cu `;`
-
-* **Restricții**
-
-    * nu sunt permise:
-        * instrucțiuni condiționale
-        * instrucțiuni repetitive
-        * alte tipuri de date
-        * funcții sau proceduri
-    * limbajul este definit fără ambiguități
-    * specificația Bison nu folosește directive de prioritate (`left`, `right`)
+- Restricții:
+  - fără if/while/for
+  - fără alte tipuri de date
+  - fără funcții/proceduri
+  - gramatica este fără conflicte și fără `%left/%right`

@@ -1,6 +1,7 @@
 %{
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 #include <string>
 #include <unordered_set>
 #include <vector>
@@ -40,7 +41,6 @@ static void cere_declarata(const std::string& name) {
 }
 
 static void scrie_asm_complet() {
-    /* ASM32 compatibil cu: nasm -fobj + alink -entry start */
     std::fprintf(gAsmOut,
         "bits 32\n\n"
         "global start\n\n"
@@ -75,110 +75,139 @@ static void scrie_asm_complet() {
 }
 %}
 
-%union { int ival; char* sval; }
+/* IMPORTANT: union clasic, NU variant */
+%union {
+    int ival;
+    char* sval;
+}
 
-%token INT READ WRITE
-%token ARROW
+%token INT CIN COUT
+%token SHR SHL
 %token <sval> ID
 %token <ival> NUMBER
+
 %start program
 
 %%
 
-program : lista_stmt { scrie_asm_complet(); } ;
+program
+    : lista_stmt { scrie_asm_complet(); }
+    ;
 
-lista_stmt : stmt | stmt lista_stmt ;
+lista_stmt
+    : stmt
+    | stmt lista_stmt
+    ;
 
-stmt : decl_stmt | read_stmt | write_stmt | assign_stmt ;
+stmt
+    : decl_stmt
+    | cin_stmt
+    | cout_stmt
+    | assign_stmt
+    ;
 
-decl_stmt : INT ID ';'
-{
-    std::string name($2);
-    free($2);
-    declara_variabila(name);
-}
-;
+decl_stmt
+    : INT ID ';'
+      {
+        std::string name($2);
+        std::free($2);
+        declara_variabila(name);
+      }
+    ;
 
-read_stmt : READ ID ';'
-{
-    std::string name($2);
-    free($2);
-    cere_declarata(name);
+cin_stmt
+    : CIN SHR ID ';'
+      {
+        std::string name($3);
+        std::free($3);
+        cere_declarata(name);
 
-    linie("; read " + name);
-    linie("push dword " + name);     /* &name */
-    linie("push dword fmt_in");
-    linie("call [scanf]");
-    linie("add esp, 8");
-    linie("");
-}
-;
+        linie("; cin >> " + name);
+        linie("push dword " + name);
+        linie("push dword fmt_in");
+        linie("call [scanf]");
+        linie("add esp, 8");
+        linie("");
+      }
+    ;
 
-write_stmt : WRITE ID ';'
-{
-    std::string name($2);
-    free($2);
-    cere_declarata(name);
+cout_stmt
+    : COUT SHL ID ';'
+      {
+        std::string name($3);
+        std::free($3);
+        cere_declarata(name);
 
-    linie("; write " + name);
-    linie("push dword [" + name + "]");
-    linie("push dword fmt_out");
-    linie("call [printf]");
-    linie("add esp, 8");
-    linie("");
-}
-;
+        linie("; cout << " + name);
+        linie("push dword [" + name + "]");
+        linie("push dword fmt_out");
+        linie("call [printf]");
+        linie("add esp, 8");
+        linie("");
+      }
+    ;
 
-assign_stmt : ID ARROW expr ';'
-{
-    std::string name($1);
-    free($1);
-    cere_declarata(name);
+assign_stmt
+    : ID '=' expr ';'
+      {
+        std::string name($1);
+        std::free($1);
+        cere_declarata(name);
 
-    linie("; store in " + name);
-    linie("pop eax");
-    linie("mov [" + name + "], eax");
-    linie("");
-}
-;
+        linie("; store in " + name);
+        linie("pop eax");
+        linie("mov [" + name + "], eax");
+        linie("");
+      }
+    ;
 
-/* precedenta: expr (+/-), term (*), factor */
-expr : term
-     | expr '+' term {
+/* precedenta fara %left/%right: expr (+/-), term (*), factor */
+expr
+    : term
+    | expr '+' term
+      {
         linie("; ADD");
         linie("pop ebx");
         linie("pop eax");
         linie("add eax, ebx");
         linie("push eax");
-     }
-     | expr '-' term {
+      }
+    | expr '-' term
+      {
         linie("; SUB");
         linie("pop ebx");
         linie("pop eax");
         linie("sub eax, ebx");
         linie("push eax");
-     }
-     ;
+      }
+    ;
 
-term : factor
-     | term '*' factor {
+term
+    : factor
+    | term '*' factor
+      {
         linie("; MUL");
         linie("pop ebx");
         linie("pop eax");
         linie("imul eax, ebx");
         linie("push eax");
-     }
-     ;
+      }
+    ;
 
-factor : NUMBER { linie("push dword " + std::to_string($1)); }
-       | ID {
-            std::string name($1);
-            free($1);
-            cere_declarata(name);
-            linie("push dword [" + name + "]");
-         }
-       | '(' expr ')'
-       ;
+factor
+    : NUMBER
+      {
+        linie("push dword " + std::to_string($1));
+      }
+    | ID
+      {
+        std::string name($1);
+        std::free($1);
+        cere_declarata(name);
+        linie("push dword [" + name + "]");
+      }
+    | '(' expr ')'
+    ;
 
 %%
 

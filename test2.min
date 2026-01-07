@@ -1,7 +1,7 @@
 int x;
 int y;
 int z;
-read x;
-read y;
-z <- x * y - 4;
-write z;
+cin >> x;
+cin >> y;
+z = (x + y) * 3 - x * 2;
+cout << z;

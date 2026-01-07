@@ -1,5 +1,11 @@
 %{
-#include "parser.tab.h"
+/* include robust: merge indiferent dacă Bison generează .h sau .hpp */
+#if __has_include("parser.tab.hpp")
+  #include "parser.tab.hpp"
+#else
+  #include "parser.tab.h"
+#endif
+
 #include <string.h>
 #include <stdlib.h>
 
@@ -10,6 +16,7 @@ static char* dup_yytext(void) {
     return s;
 }
 %}
+
 
 %option noyywrap
 %option yylineno
@@ -23,11 +30,14 @@ WS         [ \t\r\n]+
 %%
 
 "int"      { return INT; }
-"read"     { return READ; }
-"write"    { return WRITE; }
-"<-"       { return ARROW; }
+"cin"      { return CIN; }
+"cout"     { return COUT; }
+
+">>"       { return SHR; }
+"<<"       { return SHL; }
 
 ";"        { return ';'; }
+"="        { return '='; }
 "("        { return '('; }
 ")"        { return ')'; }
 "+"        { return '+'; }

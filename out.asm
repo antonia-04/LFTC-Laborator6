@@ -21,13 +21,13 @@ segment data use32 class=data
 
 segment code use32 class=code
 start:
-    ; read x
+    ; cin >> x
     push dword x
     push dword fmt_in
     call [scanf]
     add esp, 8
     
-    ; read y
+    ; cin >> y
     push dword y
     push dword fmt_in
     call [scanf]
@@ -35,12 +35,24 @@ start:
     
     push dword [x]
     push dword [y]
+    ; ADD
+    pop ebx
+    pop eax
+    add eax, ebx
+    push eax
+    push dword 3
     ; MUL
     pop ebx
     pop eax
     imul eax, ebx
     push eax
-    push dword 4
+    push dword [x]
+    push dword 2
+    ; MUL
+    pop ebx
+    pop eax
+    imul eax, ebx
+    push eax
     ; SUB
     pop ebx
     pop eax
@@ -50,7 +62,7 @@ start:
     pop eax
     mov [z], eax
     
-    ; write z
+    ; cout << z
     push dword [z]
     push dword fmt_out
     call [printf]

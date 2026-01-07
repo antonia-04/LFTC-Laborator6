@@ -1,8 +1,8 @@
 #include <cstdio>
 
 extern FILE* yyin;
-int yyparse();
 extern FILE* gAsmOut;
+int yyparse();
 
 int main(int argc, char** argv) {
     if (argc < 2) {
