@@ -21,7 +21,7 @@ static char* dup_yytext(void) {
 %option noyywrap
 %option yylineno
 
-/* definitii de pattern-uri reutilizabile */
+/* definitii de pattern-uri */
 DIGIT      [0-9]
 LETTER     [A-Za-z]
 ID         {LETTER}({LETTER}|{DIGIT}|_)*

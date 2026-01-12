@@ -16,7 +16,7 @@ void yyerror(const char* s);
 /* fisierul in care scriem codul asm generat */
 FILE* gAsmOut = nullptr;
 
-/* "tabel de simboluri" simplu: variabile declarate */
+/* tabel de simboluri: variabile declarate */
 static std::unordered_set<std::string> gVarSet;
 
 /* lista de variabile pentru a le declara in segmentul data */
@@ -32,7 +32,7 @@ static void linie(const std::string& s) { gCode << "    " << s << "\n"; }
 static void declara_variabila(const std::string& name) {
     if (gVarSet.count(name)) {
         std::fprintf(stderr,
-                     "eroare semantica (linia %d): variabila '%s' este deja declarata.\n",
+                     "Eroare semantica (linia %d): variabila '%s' este deja declarata.\n",
                      yylineno, name.c_str());
         std::exit(1);
     }
@@ -44,7 +44,7 @@ static void declara_variabila(const std::string& name) {
 static void cere_declarata(const std::string& name) {
     if (!gVarSet.count(name)) {
         std::fprintf(stderr,
-                     "eroare semantica (linia %d): variabila '%s' nu este declarata.\n",
+                     "Eroare semantica (linia %d): variabila '%s' nu este declarata.\n",
                      yylineno, name.c_str());
         std::exit(1);
     }
@@ -247,5 +247,5 @@ factor
 
 /* mesaj de eroare pentru bison */
 void yyerror(const char* s) {
-    std::fprintf(stderr, "eroare de parsare (linia %d): %s\n", yylineno, s);
+    std::fprintf(stderr, "Eroare de parsare (linia %d): %s\n", yylineno, s);
 }
